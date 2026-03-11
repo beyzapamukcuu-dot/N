@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Tatlı Kedim - Özel Versiyon</title>
+    <title>Benim Tatlı Kedim - Hazine Avı</title>
     <style>
         * { box-sizing: border-box; }
         
@@ -12,6 +12,7 @@
             width: 100%; height: 100%;
             overflow: hidden;
             font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #000;
         }
 
         .game-world {
@@ -19,74 +20,98 @@
             background: url('arkaplan.png') no-repeat center center;
             background-size: cover;
             display: flex; flex-direction: column;
-            align-items: center; justify-content: space-between;
+            align-items: center; justify-content: flex-end; /* İçeriği aşağı yasla */
             transition: filter 1s ease;
         }
 
-        /* ÜST PANEL: İstatistikler */
+        /* ÜST PANEL */
         .top-ui {
-            width: 95%; padding: 15px;
+            position: absolute; top: 0; width: 95%; padding: 15px;
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
             background: rgba(255, 255, 255, 0.8);
-            border-radius: 0 0 25px 25px;
-            border: 3px solid #000; /* Panel kontürü */
-            backdrop-filter: blur(5px);
-            margin-top: -5px;
+            border-radius: 0 0 25px 25px; border: 3px solid #000;
+            backdrop-filter: blur(5px); z-index: 20;
         }
 
         .stat-box { display: flex; align-items: center; gap: 8px; }
         .bar-bg { flex-grow: 1; height: 14px; background: #eee; border: 2px solid #000; border-radius: 10px; }
         .bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s; }
 
-        /* KARAKTER KONTEYNER */
+        /* HEDEF GÖSTERGESİ */
+        .goal-ui {
+            position: absolute; top: 110px; left: 20px;
+            background: #fff; padding: 5px 15px; border-radius: 15px;
+            border: 2px solid #000; font-size: 12px; font-weight: bold;
+        }
+
+        /* KARAKTER KONTEYNER - AŞAĞI İNDİRİLDİ */
         .character-container {
-            position: relative; flex-grow: 1;
-            display: flex; justify-content: center; align-items: center;
-            width: 100%;
+            position: relative;
+            margin-bottom: -20px; /* Butonlara daha yakın olması için */
+            display: flex; justify-content: center; align-items: flex-end;
+            width: 100%; height: 50%;
         }
 
         #pet {
-            width: 280px; transition: transform 0.3s, width 0.5s;
+            width: 280px; z-index: 5;
             cursor: pointer; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            animation: breathe 3s ease-in-out infinite; /* Nefes alma animasyonu */
+        }
+
+        /* ANİMASYONLAR */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03) translateY(-5px); }
+        }
+
+        .jump-anim { animation: jump 0.5s ease !important; }
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-50px) scale(1.1); }
+        }
+
+        .sleep-anim { animation: sleepShake 4s ease-in-out infinite !important; }
+        @keyframes sleepShake {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            50% { transform: translateX(2px) rotate(1deg); }
         }
 
         /* SİYAH KONTÜRLÜ KONUŞMA BALONU */
         .chat-bubble {
-            position: absolute; top: 15%;
-            background: white; border: 4px solid #000; /* Belirgin Siyah Kontür */
-            padding: 15px 25px; border-radius: 25px;
+            position: absolute; bottom: 110%; /* Kedinin üstünde çıkması için */
+            background: white; border: 4px solid #000;
+            padding: 12px 20px; border-radius: 25px;
             font-weight: bold; color: #000;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
-            display: none; z-index: 10;
-            max-width: 80%; text-align: center;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+            display: none; z-index: 10; text-align: center;
         }
         
-        /* Balonun altındaki ok işareti */
         .chat-bubble::after {
             content: ''; position: absolute; bottom: -15px; left: 50%;
             border-width: 15px 15px 0; border-style: solid;
             border-color: #000 transparent transparent; margin-left: -15px;
         }
 
-        /* ALT PANEL: Aksiyonlar */
+        /* ALT PANEL */
         .bottom-ui {
-            width: 100%; padding: 25px;
+            width: 100%; padding: 20px 20px 40px 20px;
             display: flex; justify-content: center; gap: 15px;
-            background: linear-gradient(transparent, rgba(255,255,255,0.9));
+            background: linear-gradient(transparent, rgba(255,255,255,1));
+            z-index: 20;
         }
 
         .action-btn {
-            width: 70px; height: 70px; border-radius: 50%;
+            width: 65px; height: 65px; border-radius: 50%;
             border: 3px solid #000; background: #ffb3c1;
-            font-size: 30px; cursor: pointer;
-            box-shadow: 0 6px 0px #000; transition: 0.1s;
+            font-size: 28px; cursor: pointer;
+            box-shadow: 0 5px 0px #000; transition: 0.1s;
         }
-        .action-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #000; }
+        .action-btn:active { transform: translateY(3px); box-shadow: 0 2px 0px #000; }
 
         .coin-display {
             position: absolute; top: 110px; right: 20px;
             background: #ffd166; padding: 8px 15px; border-radius: 20px;
-            font-weight: bold; border: 3px solid #000;
+            font-weight: bold; border: 3px solid #000; z-index: 20;
         }
     </style>
 </head>
@@ -94,29 +119,31 @@
 
 <div class="game-world" id="world">
     <div class="top-ui">
-        <div class="stat-box"><span>🍗</span><div class="bar-bg"><div id="hunger" class="bar-fill" style="background:#ff9f1c; width:80%"></div></div></div>
+        <div class="stat-box"><span>🍖</span><div class="bar-bg"><div id="hunger" class="bar-fill" style="background:#ff9f1c; width:80%"></div></div></div>
         <div class="stat-box"><span>❤️</span><div class="bar-bg"><div id="happy" class="bar-fill" style="background:#ff4d6d; width:80%"></div></div></div>
         <div class="stat-box"><span>🧼</span><div class="bar-bg"><div id="clean" class="bar-fill" style="background:#4cc9f0; width:100%"></div></div></div>
-        <div id="level-text" style="font-weight:bold; text-align:right; font-size: 1.2em;">Lv. 1</div>
+        <div id="level-text" style="font-weight:bold; text-align:right;">Lv. 1</div>
     </div>
 
+    <div class="goal-ui" id="goal-ui">🏆 Hedef: 500 Pati</div>
     <div class="coin-display">🐾 Pati: <span id="coins">0</span></div>
 
     <div class="character-container">
         <div class="chat-bubble" id="bubble">Miyav! ❤️</div>
-        <img src="kedi_uyanik.png" id="pet" alt="Kedi" onclick="saySomething('Mırrrr... Beni sevdiğin için teşekkürler! ❤️')">
+        <img src="kedi_uyanik.png" id="pet" alt="Kedi" onclick="triggerJump(); saySomething('Mırrr... Çok naziksin!')">
     </div>
 
     <div class="bottom-ui">
-        <button class="action-btn" title="Besle" onclick="playAction('feed')">🐟</button>
-        <button class="action-btn" title="Oyna" onclick="playAction('play')">🧶</button>
-        <button class="action-btn" title="Yıka" onclick="playAction('wash')">🧼</button>
-        <button class="action-btn" title="Uyut" onclick="playAction('sleep')">🌙</button>
+        <button class="action-btn" onclick="playAction('feed')">🐟</button>
+        <button class="action-btn" onclick="playAction('play')">🧶</button>
+        <button class="action-btn" onclick="playAction('wash')">🧼</button>
+        <button class="action-btn" onclick="playAction('sleep')">🌙</button>
     </div>
 </div>
 
 <script>
     let data = { hunger: 80, happy: 80, clean: 100, level: 1, coins: 0, isSleeping: false };
+    const pet = document.getElementById('pet');
 
     function updateBars() {
         document.getElementById('hunger').style.width = data.hunger + '%';
@@ -125,76 +152,71 @@
         document.getElementById('coins').innerText = data.coins;
         document.getElementById('level-text').innerText = 'Lv. ' + data.level;
         
-        // Büyüme Etkisi
-        const size = 280 + (data.level * 10);
-        document.getElementById('pet').style.width = size + 'px';
+        // Oyun Sonu Kontrolü
+        if(data.coins >= 500) {
+            document.getElementById('goal-ui').innerText = "🏆 ŞAMPİYON!";
+            document.getElementById('goal-ui').style.background = "#ffd166";
+        }
+    }
+
+    function triggerJump() {
+        if(data.isSleeping) return;
+        pet.classList.add('jump-anim');
+        setTimeout(() => pet.classList.remove('jump-anim'), 500);
     }
 
     function saySomething(text) {
         const b = document.getElementById('bubble');
         b.innerText = text;
         b.style.display = 'block';
-        setTimeout(() => b.style.display = 'none', 3500);
+        setTimeout(() => b.style.display = 'none', 3000);
     }
 
     function playAction(type) {
-        const petImg = document.getElementById('pet');
-
         if(data.isSleeping && type !== 'sleep') {
-            saySomething("Şşş... Şu an çok tatlı rüyalar görüyorum! 😴");
+            saySomething("Şşş... Uyuyorum! 😴");
             return;
         }
 
         if(type === 'feed') {
-            data.hunger = Math.min(100, data.hunger + 25);
-            data.clean -= 10;
-            data.coins += 5;
-            saySomething("Mmm! En sevdiğim balıktı bu! 🐟");
-        } else if(type === 'play') {
-            data.happy = Math.min(100, data.happy + 30);
-            data.hunger -= 15;
+            data.hunger = Math.min(100, data.hunger + 20);
             data.coins += 10;
-            saySomething("Yaşasın! Oyun oynamaya bayılıyorum! 🧶");
+            triggerJump();
+            saySomething("Mmm, enfes! 🐟");
+        } else if(type === 'play') {
+            data.happy = Math.min(100, data.happy + 25);
+            data.hunger -= 10;
+            data.coins += 20;
+            triggerJump();
+            saySomething("Yaşasın, puan topluyorum! 🧶");
         } else if(type === 'wash') {
             data.clean = 100;
-            saySomething("Gıcır gıcır oldum, mis gibi kokuyorum! 🧼");
+            data.coins += 5;
+            saySomething("Tertemiz oldum! 🧼");
         } else if(type === 'sleep') {
             data.isSleeping = !data.isSleeping;
             const world = document.getElementById('world');
-            
             if(data.isSleeping) {
-                // UYKUYA GEÇİŞ
-                petImg.src = "kedi_uyuyor.png"; 
-                world.style.filter = "brightness(0.3) contrast(1.2)";
-                saySomething("İyi geceler... Modun düştüğünde ben buradayım. 🌙");
+                pet.src = "kedi_uyuyor.png";
+                pet.classList.add('sleep-anim');
+                world.style.filter = "brightness(0.4)";
+                saySomething("İyi uykular... 🌙");
             } else {
-                // UYANMA
-                petImg.src = "kedi_uyanik.png";
+                pet.src = "kedi_uyanik.png";
+                pet.classList.remove('sleep-anim');
                 world.style.filter = "brightness(1)";
-                data.happy = 100;
-                saySomething("Günaydın! Seninle yeni bir güne hazırım! ☀️");
+                data.coins += 30; // İyi uyku ödülü
+                saySomething("Günaydın! Çok dinlendim. ☀️");
             }
         }
-
-        if(data.coins >= data.level * 50) {
-            data.level++;
-            saySomething("Bak! Sayende biraz daha büyüdüm! ✨");
-        }
-
         updateBars();
     }
 
-    // Otomatik azalma ve İhtiyaç Bildirimi
     setInterval(() => {
         if(!data.isSleeping) {
             data.hunger = Math.max(0, data.hunger - 2);
             data.happy = Math.max(0, data.happy - 1);
-            data.clean = Math.max(0, data.clean - 1);
-            
-            // İhtiyaç bildirimi (Siyah kontürlü balonla)
-            if(data.hunger < 25) saySomething("Karnım çok acıktı, bana bir balık verir misin? 🍗");
-            else if(data.clean < 25) saySomething("Tüylerim kirlendi, biraz banyo mu yapsak? 🧼");
-            
+            if(data.hunger < 20) saySomething("Karnım çok aç, puan kaybediyoruz! 🍖");
             updateBars();
         }
     }, 5000);
