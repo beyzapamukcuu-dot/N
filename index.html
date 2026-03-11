@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benim Sevgi Dolu Kedim</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body, html { 
@@ -21,18 +21,40 @@
             transition: filter 1s ease;
         }
 
-        /* ÜST PANEL */
+        /* YENİ, DAHA TATLI ÜST PANEL */
         .top-ui {
-            position: absolute; top: 0; width: 95%; padding: 15px;
-            display: flex; flex-direction: column; gap: 10px;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 0 0 20px 20px; border: 3px solid #000; z-index: 100;
+            position: absolute; top: 15px; width: 90%; padding: 15px;
+            display: flex; flex-direction: column; gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px; border: 4px solid #fff;
+            box-shadow: 0 8px 20px rgba(255, 179, 193, 0.6); /* Pembe tatlı bir gölge */
+            z-index: 100;
         }
-        .stat-box { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; }
-        .bar-bg { flex-grow: 1; height: 14px; background: #eee; border: 2px solid #000; border-radius: 10px; }
-        .bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s; }
+        
+        .stat-box { display: flex; align-items: center; gap: 10px; }
+        
+        /* Emojiler için küçük yuvarlak arka planlar */
+        .icon { 
+            font-size: 20px; background: white; border-radius: 50%; 
+            padding: 5px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); 
+        }
 
-        /* KARAKTER KONTEYNER - EN AŞAĞIDA */
+        /* Şeker çubuğu tarzı barlar */
+        .bar-bg { 
+            flex-grow: 1; height: 22px; background: #fff0f3; 
+            border: 3px solid #ffb3c1; border-radius: 20px; overflow: hidden; 
+        }
+        .bar-fill { 
+            height: 100%; border-radius: 15px; 
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        /* Çizgili Desenler (Candy Stripes) */
+        .candy-orange { background: repeating-linear-gradient(45deg, #ff9f1c, #ff9f1c 10px, #ffbf69 10px, #ffbf69 20px); }
+        .candy-pink { background: repeating-linear-gradient(45deg, #ff4d6d, #ff4d6d 10px, #ff758f 10px, #ff758f 20px); }
+        .candy-blue { background: repeating-linear-gradient(45deg, #4cc9f0, #4cc9f0 10px, #90e0ef 10px, #90e0ef 20px); }
+
+        /* KARAKTER KONTEYNER */
         .character-area {
             position: relative; width: 100%; height: 40%;
             display: flex; justify-content: center; align-items: flex-end;
@@ -50,7 +72,7 @@
             50% { transform: scale(1.02) translateY(-3px); }
         }
 
-        /* YENİ GELİŞMİŞ PARTİKÜL EFEKTİ (Fıskiye gibi saçılma) */
+        /* PARTİKÜL EFEKTİ (Fıskiye gibi saçılma) */
         .particle {
             position: absolute; pointer-events: none; z-index: 15;
             font-size: 28px; bottom: 30%; left: 50%;
@@ -67,8 +89,8 @@
             position: absolute; bottom: 105%;
             background: white; border: 4px solid #000;
             padding: 15px 20px; border-radius: 30px; 
-            font-weight: 700; color: #000; font-size: 16px;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+            font-weight: 800; color: #000; font-size: 16px;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.15);
             display: none; z-index: 50; text-align: center; min-width: 180px; max-width: 80%;
         }
         
@@ -81,7 +103,7 @@
             width: 8px; height: 8px; background: white; border: 4px solid #000; border-radius: 50%;
         }
 
-        /* ALT PANEL (5 Butonlu) */
+        /* ALT PANEL */
         .bottom-ui {
             width: 100%; padding: 15px 10px 30px 10px;
             display: flex; justify-content: center; gap: 12px;
@@ -97,7 +119,6 @@
         }
         .action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0px #000; }
         
-        /* Özel Sevgi Butonu Rengi */
         .btn-love { background: #ffb3c1; }
     </style>
 </head>
@@ -109,14 +130,14 @@
 
 <div class="game-world" id="world">
     <div class="top-ui">
-        <div class="stat-box"><span>🍖</span><div class="bar-bg"><div id="hunger" class="bar-fill" style="background:#ff9f1c; width:80%"></div></div></div>
-        <div class="stat-box"><span>❤️</span><div class="bar-bg"><div id="happy" class="bar-fill" style="background:#ff4d6d; width:80%"></div></div></div>
-        <div class="stat-box"><span>🧼</span><div class="bar-bg"><div id="clean" class="bar-fill" style="background:#4cc9f0; width:100%"></div></div></div>
+        <div class="stat-box"><span class="icon">🍗</span><div class="bar-bg"><div id="hunger" class="bar-fill candy-orange" style="width:80%"></div></div></div>
+        <div class="stat-box"><span class="icon">❤️</span><div class="bar-bg"><div id="happy" class="bar-fill candy-pink" style="width:80%"></div></div></div>
+        <div class="stat-box"><span class="icon">🧼</span><div class="bar-bg"><div id="clean" class="bar-fill candy-blue" style="width:100%"></div></div></div>
     </div>
 
     <div class="character-area" id="char-area">
         <div class="chat-bubble" id="bubble">Seni çok seviyorum! ❤️</div>
-        <img src="kedi_uyanik.png" id="pet" alt="Kedi" onclick="sayLove(); spawnParticles(['❤️', '✨'])">
+        <img src="kedi_uyanik.png" id="pet" alt="Kedi" onclick="sayLove(); spawnParticles(['❤️', '✨', '💖'])">
     </div>
 
     <div class="bottom-ui">
@@ -131,12 +152,12 @@
 <script>
     let data = { hunger: 80, happy: 80, clean: 100, isSleeping: false };
     
-    // Müzik Başlatma Sistemi (Tarayıcılar tıklama olmadan müzik başlatmaz)
+    // Müzik Başlatma
     let musicStarted = false;
     document.body.addEventListener('click', () => {
         if(!musicStarted) {
             let bgm = document.getElementById('bg-music');
-            bgm.volume = 0.4; // Müziğin sesini biraz kısık ayarladık (0.4 = %40)
+            bgm.volume = 0.4; 
             bgm.play().catch(e => console.log("Müzik çalma hatası:", e));
             musicStarted = true;
         }
@@ -161,14 +182,20 @@
         saySomething(randomMsg);
     }
 
+    let bubbleTimeout; // Baloncuğun süresini kontrol etmek için değişken eklendi
+
     function saySomething(text) {
         const b = document.getElementById('bubble');
         b.innerText = text;
         b.style.display = 'block';
-        setTimeout(() => b.style.display = 'none', 3500);
+        
+        // Eğer önceki bir zamanlayıcı varsa onu iptal et (üst üste tıklanırsa baloncuk erken kaybolmaz)
+        clearTimeout(bubbleTimeout); 
+        
+        // Baloncuğun ekranda kalma süresini 6 SİYEYE (6000ms) çıkardım
+        bubbleTimeout = setTimeout(() => b.style.display = 'none', 6000); 
     }
 
-    // Dinamik ve Rastgele Partikül Fırlatma Sistemi
     function spawnParticles(emojiList) {
         if(data.isSleeping) return;
         const area = document.getElementById('char-area');
@@ -177,9 +204,8 @@
             p.className = 'particle';
             p.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
             
-            // X ve Y ekseninde rastgele fırlama açıları hesapla
-            const xMove = (Math.random() - 0.5) * 150; // Sağa veya sola rastgele sapma
-            const yMove = - (80 + Math.random() * 100); // Yukarı doğru fırlama yüksekliği
+            const xMove = (Math.random() - 0.5) * 150; 
+            const yMove = - (80 + Math.random() * 100); 
             
             p.style.setProperty('--x', xMove + 'px');
             p.style.setProperty('--y', yMove + 'px');
@@ -197,7 +223,7 @@
 
         if(type === 'feed') {
             data.hunger = Math.min(100, data.hunger + 20);
-            spawnParticles(['🐟', '🍗', '🍖', '🍣']); // Karışık yemekler fırlar
+            spawnParticles(['🐟', '🍗', '🍖', '🍣']); 
             saySomething("Nyam nyam! Çok lezzetli!");
         } else if(type === 'play') {
             data.happy = Math.min(100, data.happy + 25);
@@ -205,11 +231,11 @@
             saySomething("Oley! Oyun oynamaya bayılıyorum!");
         } else if(type === 'quote') {
             data.happy = Math.min(100, data.happy + 10);
-            spawnParticles(['❤️', '💖', '🥰', '💌']); // Kalpler uçar
-            sayLove(); // O an rastgele güzel bir söz söyler
+            spawnParticles(['❤️', '💖', '🥰', '💌']); 
+            sayLove(); 
         } else if(type === 'wash') {
             data.clean = 100;
-            spawnParticles(['🧼', '🫧', '💧']); // Sabun ve su damlaları fırlar
+            spawnParticles(['🧼', '🫧', '💧']); 
             saySomething("Ohh! Mis gibi oldum, teşekkürler!");
         } else if(type === 'sleep') {
             data.isSleeping = !data.isSleeping;
